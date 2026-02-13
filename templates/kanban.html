@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header">
+    <h2>Pipeline Dashboard</h2>
+    <a href="/contacts/new" class="btn btn-primary">Add New Contact</a>
+</div>
+
+<div class="kanban-board">
+    {% for status, column_contacts in contacts_by_status.items() %}
+    <div class="kanban-column">
+        <div class="kanban-header header-{{ status.lower() }}">
+            {{ status }} ({{ column_contacts|length }})
+        </div>
+        {% for contact in column_contacts %}
+        <a href="/contacts/{{ contact.id }}" class="kanban-card">
+            <div class="card-title">{{ contact.name }}</div>
+            <div class="card-subtitle">{{ contact.company }}</div>
+            <div class="card-meta">
+                <span>{{ contact.created_at.strftime('%Y-%m-%d') }}</span>
+                <span class="badge badge-{{ status.lower() }}">{{ status }}</span>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

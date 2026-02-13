@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header">
+    <h2>Contacts</h2>
+    <a href="/contacts/new" class="btn btn-primary">Add New</a>
+</div>
+
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Company</th>
+            <th>Status</th>
+            <th>Created</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for contact in contacts %}
+        <tr>
+            <td>{{ contact.name }}</td>
+            <td>{{ contact.email }}</td>
+            <td>{{ contact.company }}</td>
+            <td><span class="badge badge-{{ contact.status.lower() }}">{{ contact.status }}</span></td>
+            <td>{{ contact.created_at.strftime('%Y-%m-%d') }}</td>
+            <td>
+                <a href="/contacts/{{ contact.id }}" class="btn btn-secondary" style="padding: 5px 10px; font-size: 0.9rem;">Edit</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

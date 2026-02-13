@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header">
+    <h2>Competitive Intelligence</h2>
+</div>
+
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>Company</th>
+            <th>Contact Person</th>
+            <th>Intel</th>
+            <th>Status</th>
+            <th>Last Updated</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for contact in contacts %}
+        <tr>
+            <td style="font-weight: bold;">{{ contact.company }}</td>
+            <td><a href="/contacts/{{ contact.id }}">{{ contact.name }}</a></td>
+            <td>
+                {% if contact.competitive_intel %}
+                {{ contact.competitive_intel }}
+                {% else %}
+                <span style="color: #999; font-style: italic;">No intel gathered.</span>
+                {% endif %}
+            </td>
+            <td><span class="badge badge-{{ contact.status.lower() }}">{{ contact.status }}</span></td>
+            <td>{{ contact.created_at.strftime('%Y-%m-%d') }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

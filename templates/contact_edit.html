@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header">
+    <h2>{% if contact %}Edit Contact: {{ contact.name }}{% else %}New Contact{% endif %}</h2>
+    <a href="/contacts" class="btn btn-secondary">Back to List</a>
+</div>
+
+<div class="form-container">
+    <form action="{% if contact %}/contacts/{{ contact.id }}{% else %}/contacts{% endif %}" method="post">
+        <div class="form-group">
+            <label>Name</label>
+            <input type="text" name="name" value="{{ contact.name if contact else '' }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" name="email" value="{{ contact.email if contact else '' }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label>Phone</label>
+            <input type="text" name="phone" value="{{ contact.phone if contact else '' }}">
+        </div>
+        
+        <div class="form-group">
+            <label>Company</label>
+            <input type="text" name="company" value="{{ contact.company if contact else '' }}">
+        </div>
+
+        <div class="form-group">
+            <label>Status</label>
+            <select name="status">
+                {% for s in ["Lead", "Contacted", "Proposal", "Closed"] %}
+                <option value="{{ s }}" {% if contact and contact.status == s %}selected{% endif %}>{{ s }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Competitive Intel</label>
+            <textarea name="competitive_intel">{{ contact.competitive_intel if contact else '' }}</textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save Contact</button>
+    </form>
+</div>
+
+{% if contact %}
+<div class="activity-log">
+    <h3>Activity Log</h3>
+    
+    <form action="/contacts/{{ contact.id }}/activity" method="post" style="margin-bottom: 20px; display: flex; gap: 10px;">
+        <input type="text" name="description" placeholder="Add new activity note..." required style="flex-grow: 1;">
+        <button type="submit" class="btn btn-success">Add Note</button>
+    </form>
+
+    {% if contact.activities %}
+        {% for activity in contact.activities|sort(attribute='timestamp', reverse=True) %}
+        <div class="activity-item">
+            <div class="activity-meta">{{ activity.timestamp.strftime('%Y-%m-%d %H:%M') }}</div>
+            {{ activity.description }}
+        </div>
+        {% endfor %}
+    {% else %}
+        <p style="color: #888; font-style: italic;">No activities recorded yet.</p>
+    {% endif %}
+</div>
+{% endif %}
+
+{% endblock %}
